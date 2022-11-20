@@ -1,11 +1,11 @@
 ---
-title: "R web scraping analysis: Bicycle theft in the United Kingdom"
-subtitle: "From 1st November 2019 to 31 st October 2022"
-author: "Author: Samuel Lam"
-date: "Date: 10th November 2022"
+title: 'R web scraping analysis: Bicycle theft in the United Kingdom'
+subtitle: From 1st November 2019 to 31 st October 2022
+author: 'Author: Samuel Lam'
+date: 'Date: 10th November 2022'
 output:
   html_document: default
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -275,11 +275,13 @@ nuts1 <- c("North East", "North West", "Yorkshire and The Humber", "East Midland
 ```{r, warning=FALSE}
 stolen2[!tolower(stolen2$location2) %in% tolower(nuts1), "location2"]
 ```
+<br>
 
 * While the "location1" in those rows all match the region list, which indicates location1 and location2 were input in the wrong order.
 ```{r, warning=FALSE}
 all(pull(stolen2[!tolower(stolen2$location2) %in% tolower(nuts1), "location1"]) %in% nuts1)
 ```
+<br>
 
 * Swap the values of "location1" and "location2" in those rows.
 ```{r, warning=FALSE}
@@ -378,13 +380,18 @@ The following section will examine the number of bicycle thefts based on differe
 ### 4.1.1 Number of bicycle theft by year
 ```{r, fig.align='center', warning=FALSE, out.width="90%"}
 year_count <- tibble(
-  year = c("2019-11-01 ~ 2020-10-31", "2020-11-01 ~ 2021-10-31", "2021-11-01 ~ 2022-10-31"),
-  freq = c(pull(stolen2 %>% filter(date >= "2019-11-01", date <= "2020-10-31") %>% count()),
-            pull(stolen2 %>% filter(date >= "2020-11-01", date <= "2021-10-31") %>% count()),
-            pull(stolen2 %>% filter(date >= "2021-11-01", date <= "2022-10-31") %>% count())))
+  year = c("2019-11-01 ~ 2020-10-31", "2020-11-01 ~ 2021-10-31", 
+           "2021-11-01 ~ 2022-10-31"),
+  freq = c(pull(stolen2 %>% filter(date >= "2019-11-01", date <= "2020-10-31") %>% 
+                  count()),
+            pull(stolen2 %>% filter(date >= "2020-11-01", date <= "2021-10-31") %>% 
+                   count()),
+            pull(stolen2 %>% filter(date >= "2021-11-01", date <= "2022-10-31") %>%
+                   count())))
 
 year_count %>% ggplot(aes(x = year, y = freq, fill = freq)) +
-  geom_col() + geom_text(aes(label = freq), size = 10, position = position_stack(vjust = .5), alpha = .7) +
+  geom_col() + geom_text(aes(label = freq), size = 10, 
+                         position = position_stack(vjust = .5), alpha = .7) +
   labs(x = NULL, y = NULL, title = "Total number of bicycle theft by year",
        subtitle = "from 1st November 2019 to 31st October 2022",
        caption = "Data source: Stolen Bikes UK") +
@@ -396,14 +403,18 @@ year_count %>% ggplot(aes(x = year, y = freq, fill = freq)) +
                           axis.text.x = element_text(size = 12))
 ```
 
-* It is observed that the total number decreases 14% in the second year from 4,141 to 3,564, and a further 17% reduction from 3,564 to 2,957 in the third year.
-
+* It is observed that the total number decreases 13.7% in the second year from 4,149 to 3,582, and a further 17.3% reduction from 3,582 to 2,964 in the third year.
+<br>
+<br>
 
 ```{r, fig.align='center', warning=FALSE, out.width="90%"}
 stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>% count(date)%>% 
-  mutate(year = case_when(date >= "2019-11-01" & date <= "2020-10-31" ~ "2019-11-01 ~ 2020-10-31",
-                          date >= "2020-11-01" & date <= "2021-10-31" ~ "2020-11-01 ~ 2021-10-31",
-                          date >= "2021-11-01" & date <= "2022-10-31" ~ "2021-11-01 ~ 2022-10-31")) %>% 
+  mutate(year = case_when(date >= "2019-11-01" & 
+                            date <= "2020-10-31" ~ "2019-11-01 ~ 2020-10-31",
+                          date >= "2020-11-01" & 
+                            date <= "2021-10-31" ~ "2020-11-01 ~ 2021-10-31",
+                          date >= "2021-11-01" & 
+                            date <= "2022-10-31" ~ "2021-11-01 ~ 2022-10-31")) %>% 
   ggplot(aes(x = str_wrap(year,10), y = n, fill = year)) + geom_boxplot() + 
   scale_fill_manual(values=c("#9e3d22", "goldenrod1", "#2b5c8a")) +
   labs(x = NULL, y = NULL, title = "Daily number of bicycle theft by year",
@@ -436,7 +447,8 @@ stolen2$season <-
 
 stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>% 
   count(season) %>% ggplot(aes(x = season, y= n, fill = n)) + geom_col() +
-  geom_text(aes(label = n), size = 10, position = position_stack(vjust = .5), alpha = .7) +
+  geom_text(aes(label = n), size = 10, position = position_stack(vjust = .5),
+            alpha = .7) +
   scale_fill_gradientn(colours = c("#2b5c8a", "goldenrod1", "#9e3d22")) +
   labs(x = NULL, y = NULL,
        title = "Total number of bicycle theft by season",
@@ -449,22 +461,29 @@ stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>%
                           axis.text.x = element_text(size = 12))
 ```
 
-* Summer and autumn make up a relatively larger portion of the number, with the percentage of number held by spring, summer, autumn, winter, are 24%, 28.7%, 28.1%, and 19.2% respectively.
+* Summer and autumn make up a relatively larger portion of the number, with the percentage of number held by spring, summer, autumn, winter, are 24%, 28.6%, 28.2%, and 19.2% respectively.
+<br>
+<br>
 
 ```{r, fig.align='center', warning=FALSE, out.width="90%"}
-stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>% group_by(season) %>% count(date) %>%
-  mutate(year = case_when(date >= "2019-11-01" & date <= "2020-10-31" ~ "2019-11-01 ~ 2020-10-31",
-                          date >= "2020-11-01" & date <= "2021-10-31" ~ "2020-11-01 ~ 2021-10-31",
-                          date >= "2021-11-01" & date <= "2022-10-31" ~ "2021-11-01 ~ 2022-10-31")) %>% 
+stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>% group_by(season) %>%
+  count(date) %>% mutate( year = case_when(date >= "2019-11-01" & 
+                            date <= "2020-10-31" ~ "2019-11-01 ~ 2020-10-31",
+                          date >= "2020-11-01" & 
+                            date <= "2021-10-31" ~ "2020-11-01 ~ 2021-10-31",
+                          date >= "2021-11-01" & 
+                            date <= "2022-10-31" ~ "2021-11-01 ~ 2022-10-31")) %>% 
   ggplot(aes(x = str_wrap(year,10), y = n, fill = season)) + geom_boxplot(alpha = 0.8) + 
   labs(x = NULL, y = NULL, title = "Daily number of bicycle theft by year",
        subtitle = "from 1st November 2019 to 31st October 2022",
        caption = "Data source: Stolen Bikes UK") +
-  scale_x_discrete(expand=c(0, 0.4)) + scale_y_continuous(expand = c(0,1), breaks = seq(0, 30, 5)) +
+  scale_x_discrete(expand=c(0, 0.4)) + scale_y_continuous(expand = c(0,1), 
+                                                          breaks = seq(0, 30, 5)) +
   theme_minimal() + theme(text = element_text(face = "bold"), legend.position = "bottom",
                           plot.title = element_text(size = 18),
                           panel.grid = element_blank(),
-                          panel.grid.major.y = element_line(linetype = 2, colour = "grey"),
+                          panel.grid.major.y = element_line(linetype = 2,
+                                                            colour = "grey"),
                           axis.text.x = element_text(size = 12))
 ```
 
@@ -496,8 +515,10 @@ stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>%
 
 
 stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>%
-  count(month = month(date)) %>% mutate(avg = n/days_in_month(month)/3) %>%  ggplot(aes(x = month, y = avg)) +
-  geom_line(size = 1.1, colour = "darkgrey") + geom_point(aes(colour = avg), size = 3.3) +
+  count(month = month(date)) %>% mutate(avg = n/days_in_month(month)/3) %>%
+  ggplot(aes(x = month, y = avg)) +
+  geom_line(size = 1.1, colour = "darkgrey") + 
+  geom_point(aes(colour = avg), size = 3.3) +
   geom_text(data = . %>% filter(avg %in% c(max(avg), min(avg))), 
             aes(label = round(avg,2)), size = 5, nudge_x = -0.6, nudge_y = 0.2) + 
   scale_colour_gradientn(colours = c("#2b5c8a", "goldenrod1", "#9e3d22")) + 
@@ -518,7 +539,8 @@ stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>%
 
 * Similar to the seasonal number, most cases line between June to October.
 * There is a rising trend from the start of the year to October, followed by a sharp drop in November and December.
-
+<br>
+<br>
 
 ```{r, fig.align='center', warning=FALSE, out.width="90%"}
 stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>%
@@ -533,12 +555,14 @@ ggplot(aes(x = month, y = n, fill = month, group = month)) + geom_boxplot(alpha 
   theme_minimal() + theme(text = element_text(face = "bold"), legend.position = "none",
                           plot.title = element_text(size = 18),
                           panel.grid = element_blank(),
-                          panel.grid.major.y = element_line(linetype = 2, colour = "grey"),
+                          panel.grid.major.y = element_line(linetype = 2,
+                                                            colour = "grey"),
                           axis.text.x = element_text(size = 12))
 ```
 
 * As observed from the daily number by month, there are more higher value outliers from July to November, which means the daily number of cases could be diverging in these months, up to 30 cases a day.
-
+<br>
+<br>
 
 ```{r, fig.align='center', warning=FALSE, out.width="90%"}
 stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>%
@@ -602,6 +626,8 @@ week_case %>% ggplot(aes(x = "", y = percent, fill = weekday)) +
 ```
 
 * The numbers of cases distribute quite evenly in all days, with Monday the highest and Sunday the lowest.
+<br>
+<br>
 
 ```{r, fig.align='center', warning=FALSE, out.width="90%"}
 stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>%
@@ -616,7 +642,8 @@ ggplot(aes(x = weekday, y = n, fill = weekday, group = weekday)) + geom_boxplot(
   theme_minimal() + theme(text = element_text(face = "bold"), legend.position = "none",
                           plot.title = element_text(size = 18),
                           panel.grid = element_blank(),
-                          panel.grid.major.y = element_line(linetype = 2, colour = "grey"))
+                          panel.grid.major.y = element_line(linetype = 2,
+                                                            colour = "grey"))
 ```
 
 * As noticed from the daily numbers, Monday and Saturday have got some particularly higher values than other days.
@@ -633,7 +660,8 @@ stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>% count(date) %
        subtitle = "from 1st November 2019 to 31st October 2022",
        x = NULL, y = NULL, caption = "Data source: Stolen Bikes UK") +
   theme(text = element_text(face = "bold"), legend.position = "none",
-        plot.title = element_text(size = 18), axis.text.x = element_text(angle=90, vjust=0.5),
+        plot.title = element_text(size = 18), axis.text.x = element_text(angle=90, 
+                                                                         vjust=0.5),
         panel.background =element_rect(fill = "white", colour = "grey"),
         panel.grid = element_blank()) +
   scale_x_date(expand=c(0,0), date_breaks = "1 month", date_labels = "%Y-%m") + 
@@ -642,21 +670,26 @@ stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>% count(date) %
                               by = "3 month"), linetype = 5, alpha = 0.5) +
   annotate("text", x = seq(as.Date("2019-12-1"), as.Date("2022-10-31"),
                            by = "12 month"), y = 31, label = "Winter", 
-           hjust = -0.03, fontface = "bold.italic", colour = "black", alpha = 0.5, size = 3.2) +
+           hjust = -0.03, fontface = "bold.italic", colour = "black", alpha = 0.5,
+           size = 3.2) +
   annotate("text", x = seq(as.Date("2020-3-1"), as.Date("2022-10-31"),
                            by = "12 month"), y = 31, label = "Spring", 
-           hjust = -0.03, fontface = "bold.italic", colour = "black", alpha = 0.5, size = 3.2) +
+           hjust = -0.03, fontface = "bold.italic", colour = "black", alpha = 0.5,
+           size = 3.2) +
   annotate("text", x = seq(as.Date("2020-6-1"), as.Date("2022-10-31"),
                            by = "12 month"), y = 31, label = "Summer", 
-           hjust = -0.03, fontface = "bold.italic", colour = "black", alpha = 0.5, size = 3.2) +
+           hjust = -0.03, fontface = "bold.italic", colour = "black", alpha = 0.5,
+           size = 3.2) +
   annotate("text", x = seq(as.Date("2020-9-1"), as.Date("2021-10-31"),
                            by = "12 month"), y = 31, label = "Autumn", 
-           hjust = -0.03, fontface = "bold.italic", colour = "black", alpha = 0.5, size = 3.2)
+           hjust = -0.03, fontface = "bold.italic", colour = "black", alpha = 0.5,
+           size = 3.2)
 ```
 
 * When reviewing the number of cases by day, it can also be seen that larger numbers happened in summer and autumn in each year, with relatively fewer in year 2021 than that in 2020.
 * Winter remains the fewest.
-
+<br>
+<br>
 
 ```{r, fig.align='center', warning=FALSE, out.width="90%"}
 stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>% count(date) %>% 
@@ -671,7 +704,8 @@ stolen2 %>% filter(date >= "2019-11-01", date <= "2022-10-31") %>% count(date) %
         plot.title = element_text(size = 18), axis.ticks = element_blank(),
         axis.text = element_text(size = 7), strip.text = element_text(size=16),
         panel.background =element_rect(fill = "white", colour = "grey"),
-        panel.grid = element_blank()) +  scale_y_continuous(expand=c(0,0), breaks=seq(1,31,1)) +
+        panel.grid = element_blank()) +  scale_y_continuous(expand=c(0,0), 
+                                                            breaks=seq(1,31,1)) +
   scale_x_continuous(expand = c(0,0), breaks=seq(1,12,1))
 ```
 
@@ -707,15 +741,18 @@ stolen2 %>% count(region) %>% arrange(desc(n)) %>%
         plot.title = element_text(size = 18),
         axis.text.y = element_text(lineheight = 0.75),
         panel.background =element_rect(fill = "white", colour = "grey"),
-        panel.grid = element_blank(), panel.grid.major.x = element_line(colour = "grey", linetype = 4),
+        panel.grid = element_blank(), panel.grid.major.x = element_line(colour = "grey", 
+                                                                        linetype = 4),
         panel.grid.minor.x = element_line(colour = "grey", linetype = 4)) +
   scale_x_continuous(expand=c(0,0,0,500))
 
 stolen2 %>% count(region) %>% arrange() %>% 
   mutate(percent_in_pop = n / uk_population[, "population"] * 1000) %>%
   arrange(desc(percent_in_pop)) %>% 
-  ggplot(aes(y = fct_inorder(str_wrap(region,10)), x = percent_in_pop, fill = percent_in_pop)) +
-  geom_col() + geom_text(aes(label = round(percent_in_pop,3)), hjust="inward", fontface = "bold", size = 4) +
+  ggplot(aes(y = fct_inorder(str_wrap(region,10)), x = percent_in_pop,
+             fill = percent_in_pop)) +
+  geom_col() + geom_text(aes(label = round(percent_in_pop,3)), hjust="inward",
+                         fontface = "bold", size = 4) +
   scale_fill_gradientn(colours = c("#2b5c8a", "goldenrod1", "#9e3d22")) +
   labs(x = NULL, y = NULL,
        title = "Bicycle theft crime rate by regions", subtitle = "% per 1,000 residents",
@@ -724,7 +761,8 @@ stolen2 %>% count(region) %>% arrange() %>%
         plot.title = element_text(size = 18),
         axis.text.y = element_text(lineheight = 0.75),
         panel.background =element_rect(fill = "white", colour = "grey"),
-        panel.grid = element_blank(), panel.grid.major.x = element_line(colour = "grey", linetype = 4),
+        panel.grid = element_blank(), panel.grid.major.x = element_line(colour = "grey", 
+                                                                        linetype = 4),
         panel.grid.minor.x = element_line(colour = "grey", linetype = 4)) +
   scale_x_continuous(expand=c(0,0,0,0.01))
 ```
@@ -751,6 +789,8 @@ stolen2 %>% count(city) %>%
 
 * Among the cities, London still has the greatest number.
 * As expected from the previous bar charts, cities from the South East (England), South West (England), Scotland, North West (England) occupy the higher rankings.
+<br>
+<br>
 
 ```{r, fig.align='center', warning=FALSE, out.width="90%"}
 stolen2 %>% filter(city != "London") %>% count(city) %>% 
@@ -789,6 +829,8 @@ word_summary <- function (data, exclude = NA, remove = "[?]") {
     arrange(desc(freq))
   }
 ```
+<br>
+<br>
 
 * Count the words in the "colour" column and omit some unrelated words that may appear.
 * Plot chart with the top 30 words that appear the most frequent.
@@ -848,7 +890,8 @@ labs(x = NULL, y = NULL, fill = "Frequency",
 
 * The top colours among different regions are similar to the previous chart.
 * With no surprise that London has got the greatest numbers in all colours across all regions.
-
+<br>
+<br>
 
 ```{r, fig.align='center', warning=FALSE, out.width="90%"}
 colour_nuts1 %>% filter(area %in% c("London", "South East (England)",
@@ -858,7 +901,7 @@ colour_nuts1 %>% filter(area %in% c("London", "South East (England)",
   scale_fill_gradientn(colours = c("#2b5c8a", "goldenrod1", "#9e3d22")) +
   labs(x = NULL, y = NULL, fill = "Frequency",
        title = "Colours of stolen bicycles",
-       subtitle = "Top 10 most frequent words of \nLondon, South East (England), South West (England)",
+subtitle = "Top 10 most frequent words of \nLondon, South East (England), South West (England)",
        caption = "Data source: Stolen Bikes UK") +
   theme(text = element_text(face = "bold"),
         plot.title = element_text(size = 18),
@@ -871,7 +914,7 @@ colour_nuts1 %>% filter(!(area %in% c("London", "South East (England)",
   scale_fill_gradientn(colours = c("#2b5c8a", "goldenrod1", "#9e3d22")) +
   labs(x = NULL, y = NULL, fill = "Frequency",
        title = "Colours of stolen bicycles",
-       subtitle = "Top 10 most frequent words EXCLUDE \nLondon, South East (England), South West (England)",
+subtitle = "Top 10 most frequent words EXCLUDE \nLondon, South East (England), South West (England)",
        caption = str_wrap("*Blank: not the top 10 colour words of the corresponding
                         region Data source: Stolen Bikes UK",65)) +
   theme(text = element_text(face = "bold"),
@@ -905,6 +948,8 @@ bikename_word[1:30,] %>% ggplot(aes(x = freq, y = fct_inorder(word), fill = freq
 
 * It is not surprising that some of the big bicycle brands are found in the list, with "Carrera" comes in first place, followed by "Specialized", "Trek", "Giant" and "Cannondale".
 * For the bicycle type, "hybrid" is at a top rank. "Disc" may refer to disc brakes (compared to rim brakes, a type of brake technology in the wheel). "Mountain" and "sport" bicycle also appear as one of the most frequent words.
+<br>
+<br>
 
 ```{r fig.align='center', fig.height=1.7, warning=FALSE, out.width="100%"}
 wordcloud2::wordcloud2(bikename_word)
@@ -921,8 +966,9 @@ More details of the stolen bicycles are provided in this section by the owners.
 * Count the words in the "bike_des" column and omit some unrelated words that may appear.
 ```{r fig.align='center', fig.height=1.7, warning=FALSE, out.width="100%"}
 bike_word <- word_summary(stolen2$bike_des,
-                          c("a", "and", "for", "the", "in", "was", "from", "to", "of", "on", "it",
-                            "my", "at", "with", "unknown", "is", "", "or", "by", "be"), "[[:punct:]]")
+                          c("a", "and", "for", "the", "in", "was", "from", "to", "of",
+                            "on", "it", "my", "at", "with", "unknown", "is", "", "or",
+                            "by", "be"), "[[:punct:]]")
 
 wordcloud2::wordcloud2(bike_word)
 ```
@@ -939,8 +985,9 @@ Details of the thefts are also vital clues for recovering the bicycles.
 * Count the words in the "theft_des" column and omit some unrelated words that may appear.
 ```{r fig.align='center', fig.height=1.7, warning=FALSE, out.width="100%"}
 theft_word <- word_summary(stolen2$theft_des,
-                           c("a", "and", "for", "the", "in", "was", "from", "to", "of", "on", "it",
-                             "my", "at", "with", "unknown", "is", "", "or", "by", "be"), "[[:punct:]]")
+                           c("a", "and", "for", "the", "in", "was", "from", "to", "of",
+                             "on", "it", "my", "at", "with", "unknown", "is", "", "or",
+                             "by", "be"), "[[:punct:]]")
 
 wordcloud2::wordcloud2(theft_word, size = 1.5)
 ```
@@ -975,7 +1022,8 @@ ggplot() + geom_polygon(data = reward_region.gg,
   geom_text(data = reward_region,
             aes(x, y, size = average_reward, label = str_wrap(region, 10)),
             colour = "white", fontface = "bold") +
-  labs(title = "Average reward of bicycle recovery by regions", fill = "Average\nreward\n(GBP)") +
+  labs(title = "Average reward of bicycle recovery by regions",
+       fill = "Average\nreward\n(GBP)") +
   scale_size_continuous(range = c(2.7287,4.5)) + theme_void() +
   theme(text = element_text(face = "bold"),
         plot.title = element_text(size = 18),
@@ -1006,7 +1054,8 @@ ggplot() + geom_polygon(data = reward_city.gg,
   geom_text(data = reward_city,
             aes(x, y, size = average_reward, label = str_wrap(city, 10)),
             colour = "white", fontface = "bold") +
-  labs(title = "Average reward of bicycle recovery by cities", fill = "Average\nreward\n(GBP)") +
+  labs(title = "Average reward of bicycle recovery by cities",
+       fill = "Average\nreward\n(GBP)") +
   scale_size_continuous(range = c(0.5,2.4)) + theme_void() +
   theme(text = element_text(face = "bold"),
     plot.title = element_text(size = 18),
