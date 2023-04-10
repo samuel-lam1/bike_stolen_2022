@@ -6,4 +6,5 @@ the United Kingdom across the past three years (from 1st November 2019 to
 and other insightful information. </li>
 <li>R programming was used.</li>
 <li>Data was collected by web scraping from the website https://stolen-bikes.co.uk</li>
+<li><a href="https://www.kaggle.com/code/samsam4521/web-scraping-analysis-bicycle-theft-in-the-uk?scriptVersionId=111590246">View on Kaggle</a></li>
 </ul>
